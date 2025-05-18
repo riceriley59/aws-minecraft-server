@@ -1,0 +1,28 @@
+# Local .terraform directories
+**/.terraform/*
+!.terraform/providers # keep provider plugins if vendored intentionally
+
+# Terraform state files
+*.tfstate
+*.tfstate.*
+
+# Crash log files
+crash.log
+
+# Exclude variable override files
+*.tfvars
+*.tfvars.json
+
+# Sensitive plans or temporary files
+*.plan
+*.backup
+
+# Ignore CLI configuration files
+.terraformrc
+terraform.rc
+
+# Ansible and SSH artifacts
+*.retry
+*.pem
+.ssh/
+inventory.ini
