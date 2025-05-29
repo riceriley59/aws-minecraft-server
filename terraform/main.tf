@@ -1,9 +1,9 @@
 provider "aws" {
-  region = "us-west-2"
+  region = var.region
 }
 
 resource "aws_vpc" "minecraft-vpc" {
-  cidr_block           = "10.3.15.0/24"
+  cidr_block           = var.vpc_cidr
   enable_dns_support   = true
   enable_dns_hostnames = true
 
@@ -14,9 +14,9 @@ resource "aws_vpc" "minecraft-vpc" {
 
 resource "aws_subnet" "minecraft-subnet-public1" {
   vpc_id                  = aws_vpc.minecraft-vpc.id
-  cidr_block              = "10.3.15.0/28"
+  cidr_block              = var.subnet_cidr_public1
   map_public_ip_on_launch = true
-  availability_zone       = "us-west-2a"
+  availability_zone       = var.availability_zone_1
 
   tags = {
     Name = "minecraft-subnet-public1"
@@ -25,9 +25,9 @@ resource "aws_subnet" "minecraft-subnet-public1" {
 
 resource "aws_subnet" "minecraft-subnet-public2" {
   vpc_id                  = aws_vpc.minecraft-vpc.id
-  cidr_block              = "10.3.15.16/28"
+  cidr_block              = var.subnet_cidr_public2
   map_public_ip_on_launch = true
-  availability_zone       = "us-west-2b"
+  availability_zone       = var.availability_zone_2
 
   tags = {
     Name = "minecraft-subnet-public2"
@@ -93,10 +93,10 @@ resource "aws_security_group" "minecraft-sg" {
 }
 
 resource "aws_instance" "minecraft-server" {
-  ami           = "ami-075686beab831bb7f"
-  instance_type = "t2.small"
+  ami           = var.ami_id
+  instance_type = var.instance_type
   subnet_id     = aws_subnet.minecraft-subnet-public1.id
-  key_name      = "M4 Macbook Pro"
+  key_name      = var.key_name
 
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.minecraft-sg.id]
@@ -105,4 +105,3 @@ resource "aws_instance" "minecraft-server" {
     Name = "Terraform Minecraft Server"
   }
 }
-
