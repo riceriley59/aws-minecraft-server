@@ -10,3 +10,5 @@ jobs:
   configure:
     needs: provision
     uses: ./.github/workflows/configure.yaml
+    with:
+      public_ip: ${{ needs.provision.outputs.public_ip }}
