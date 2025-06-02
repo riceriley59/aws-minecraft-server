@@ -1,0 +1,12 @@
+name: Standup Infrastructure on Push
+on:
+  push:
+    branches:
+      - main
+jobs:
+  provision:
+    uses: ./.github/workflows/provision.yaml
+
+  configure:
+    needs: provision
+    uses: ./.github/workflows/configure.yaml
