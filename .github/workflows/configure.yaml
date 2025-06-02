@@ -29,6 +29,10 @@ jobs:
           touch ~/.ssh/known_hosts
           ssh-keyscan -H ${{ inputs.public_ip }} >> ~/.ssh/known_hosts
 
+      - name: Test ssh connection
+        run: |
+          ssh -i ~/.ssh/id_rsa -vvv ubuntu@${{ inputs.public_ip }}
+
       - name: Generate inventory file
         run: |
           echo "[minecraft]" > inventory.ini
