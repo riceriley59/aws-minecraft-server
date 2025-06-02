@@ -55,7 +55,7 @@ jobs:
         run: terraform apply -var 'key_path=./id_rsa.pub' -auto-approve
 
       - name: Get Public IP
-        id: output-ip
+        id: output_ip
         run: |
           ip=$(terraform output -raw minecraft_server_ip)
-          echo "public-ip=$ip" >> $GITHUB_OUTPUT
+          echo "public_ip=$ip" >> $GITHUB_OUTPUT
