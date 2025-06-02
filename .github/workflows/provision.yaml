@@ -1,26 +1,21 @@
 name: Provision Infrastructure
 on:
   workflow_call:
-    inputs:
-      public-key:
+    secrets:
+      SSH_PUBLIC_KEY:
         required: true
-        type: string
-      aws-access-key-id:
+      AWS_ACCESS_KEY_ID:
         required: true
-        type: string
-      aws-secret-access-key:
+      AWS_SECRET_ACCESS_KEY:
         required: true
-        type: string
-      aws-region:
-        required: true
-        type: string
-      aws-session-token:
+      AWS_SESSION_TOKEN:
         required: false
-        type: string
+      AWS_REGION:
+        required: true
     outputs:
-      public-ip:
-        description: "The IP for the provisioned minecraft server"
-        value: ${{ jobs.terraform.outputs.public-ip }}
+      public_ip:
+        description: "The IP for the provisioned server"
+        value: ${{ jobs.terraform.outputs.public_ip }}
 jobs:
   terraform:
     runs-on: ubuntu-latest
@@ -34,18 +29,18 @@ jobs:
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
 
-      - name: Add SSH public key from secret
+      - name: Add SSH public key
         run: |
-          echo "${{ inputs.public-key }}" > id_rsa.pub
+          echo "${{ secrets.SSH_PUBLIC_KEY }}" > id_rsa.pub
           chmod 600 id_rsa.pub
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ inputs.aws-access-key-id }}
-          aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
-          aws-session-token: ${{ inputs.aws-session-token }}
-          aws-region: ${{ inputs.aws-region }}
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Terraform Init
         run: terraform init
