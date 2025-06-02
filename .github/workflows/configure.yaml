@@ -2,10 +2,10 @@ name: Configure Infrastructure
 on:
   workflow_call:
     inputs:
-      public_ip:
+      public-ip:
         required: true
         type: string
-      private_key:
+      private-key:
         required: true
         type: string
 jobs:
@@ -25,13 +25,13 @@ jobs:
 
       - name: Add SSH private key
         run: |
-          echo "${{ inputs.private_key }}" > id_rsa
+          echo "${{ inputs.private-key }}" > id_rsa
           chmod 600 id_rsa
 
       - name: Generate inventory file
         run: |
           echo "[minecraft]" > inventory.ini
-          echo "${{ inputs.public_ip }} ansible_user=ubuntu ansible_ssh_private_key_file=./id_rsa" >> inventory.ini
+          echo "${{ inputs.public-ip }} ansible_user=ubuntu ansible_ssh_private_key_file=./id_rsa" >> inventory.ini
 
       - name: Run Ansible Playbook
         run: ansible-playbook minecraft.yaml -i inventory.ini
