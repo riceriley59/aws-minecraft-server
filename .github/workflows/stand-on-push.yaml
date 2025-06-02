@@ -6,9 +6,16 @@ on:
 jobs:
   provision:
     uses: ./.github/workflows/provision.yaml
+    with:
+      public-key: ${{ secrets.SSH_PUBLIC_KEY }}
+      aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+      aws-region: ${{ secrets.AWS_REGION }}
 
   configure:
     needs: provision
     uses: ./.github/workflows/configure.yaml
     with:
       public_ip: ${{ needs.provision.outputs.public_ip }}
+      private_key: ${{ secrets.SSH_PRIVATE_KEY }}

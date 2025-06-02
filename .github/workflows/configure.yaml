@@ -5,6 +5,9 @@ on:
       public_ip:
         required: true
         type: string
+      private_key:
+        required: true
+        type: string
 jobs:
   ansible:
     runs-on: ubuntu-latest
@@ -20,9 +23,9 @@ jobs:
           sudo apt update
           sudo apt install -y ansible
 
-      - name: Add SSH private key from secret
+      - name: Add SSH private key
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
+          echo "${{ inputs.private_key }}" > id_rsa
           chmod 600 id_rsa
 
       - name: Generate inventory file

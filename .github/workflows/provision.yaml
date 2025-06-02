@@ -1,6 +1,22 @@
 name: Provision Infrastructure
 on:
   workflow_call:
+    inputs:
+      public_key:
+        required: true
+        type: string
+      aws-access-key-id:
+        required: true
+        type: string
+      aws-secret-access-key:
+        required: true
+        type: string
+      aws-region:
+        required: true
+        type: string
+      aws-session-token:
+        required: false
+        type: string
     outputs:
       public_ip:
         description: "The IP for the provisioned minecraft server"
@@ -20,16 +36,16 @@ jobs:
 
       - name: Add SSH public key from secret
         run: |
-          echo "${{ secrets.SSH_PUBLIC_KEY }}" > id_rsa.pub
+          echo "${{ inputs.public_key }}" > id_rsa.pub
           chmod 600 id_rsa.pub
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-access-key-id: ${{ inputs.aws-access-key-id }}
+          aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+          aws-session-token: ${{ inputs.aws-session-token }}
+          aws-region: ${{ inputs.aws-region }}
 
       - name: Terraform Init
         run: terraform init
