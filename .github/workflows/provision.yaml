@@ -22,6 +22,8 @@ jobs:
     defaults:
       run:
         working-directory: ./terraform
+    outputs:
+      public_ip: ${{ steps.output_ip.outputs.public_ip }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
