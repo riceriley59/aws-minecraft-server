@@ -24,14 +24,13 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
 
-      - name: Add server to known_hosts
+      - name: Add server to known_hosts and setup ssh key
         run: |
+          eval "$(ssh-agent -s)"
+          ssh-add ~/.ssh/id_rsa
+
           touch ~/.ssh/known_hosts
           ssh-keyscan -H ${{ inputs.public_ip }} >> ~/.ssh/known_hosts
-
-      - name: Test ssh connection
-        run: |
-          ssh -i ~/.ssh/id_rsa -vv ubuntu@${{ inputs.public_ip }}
 
       - name: Generate inventory file
         run: |
