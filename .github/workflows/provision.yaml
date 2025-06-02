@@ -33,7 +33,8 @@ jobs:
 
       - name: Add SSH public key
         run: |
-          echo "${{ secrets.SSH_PUBLIC_KEY }}" > id_rsa.pub
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PUBLIC_KEY }}" > ~/.ssh/id_rsa.pub
           chmod 600 id_rsa.pub
 
       - name: Configure AWS credentials
@@ -51,10 +52,10 @@ jobs:
         run: terraform validate
 
       - name: Terraform Plan
-        run: terraform plan -var 'key_path=./id_rsa.pub'
+        run: terraform plan -var 'key_path=~/.ssh/id_rsa.pub'
 
       - name: Terraform Apply
-        run: terraform apply -var 'key_path=./id_rsa.pub' -auto-approve
+        run: terraform apply -var 'key_path=~/.ssh/id_rsa.pub' -auto-approve
 
       - name: Get Public IP
         id: output_ip

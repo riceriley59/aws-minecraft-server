@@ -20,7 +20,8 @@ jobs:
 
       - name: Add SSH private key
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 id_rsa
 
       - name: Add server to known_hosts
@@ -31,7 +32,7 @@ jobs:
       - name: Generate inventory file
         run: |
           echo "[minecraft]" > inventory.ini
-          echo "${{ inputs.public_ip }} ansible_user=ubuntu ansible_ssh_private_key_file=./id_rsa" >> inventory.ini
+          echo "${{ inputs.public_ip }} ansible_user=ubuntu ansible_ssh_private_key_file=~/.ssh/id_rsa" >> inventory.ini
 
       - name: Run Ansible Playbook
         run: ansible-playbook minecraft.yaml -i inventory.ini
