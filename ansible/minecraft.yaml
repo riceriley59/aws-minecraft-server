@@ -1,0 +1,103 @@
+- name: Setup minecraft server
+  hosts: minecraft
+  become: yes
+  tasks:
+    - name: Update machine
+      apt:
+        update-cache: yes
+        cache_valid_time: 3600
+
+    - name: Install java (OpenJDK 21 headless)
+      apt:
+        name: openjdk-21-jdk-headless
+        state: present
+
+    - name: Create minecraft group
+      group:
+        name: minecraft
+        system: yes
+
+    - name: Create minecraft system user
+      user:
+        name: minecraft
+        group: minecraft
+        system: yes
+        create_home: no
+        shell: /usr/sbin/nologin
+
+    - name: Create minecraft directory
+      file:
+        path: /opt/minecraft
+        state: directory
+        mode: '0755'
+        owner: minecraft
+        group: minecraft
+
+    - name: Download minecraft server (1.21.5)
+      get_url:
+        url: https://piston-data.mojang.com/v1/objects/e6ec2f64e6080b9b5d9b471b291c33cc7f509733/server.jar
+        dest: /opt/minecraft/server.jar
+
+    - name: Copy EULA acceptance
+      copy:
+        dest: /opt/minecraft/eula.txt
+        mode: '0755'
+        content: |
+          eula=true
+
+    - name: Create start script
+      copy:
+        dest: /opt/minecraft/start
+        mode: '0755'
+        content: |
+          #!/bin/bash
+
+          # start minecraft server
+          java -Xms1024M -Xmx2048M -jar server.jar --nogui
+
+    - name: Create stop script
+      copy:
+        dest: /opt/minecraft/stop
+        mode: '0755'
+        content: |
+          #!/bin/bash
+
+          # stop minecraft server
+          kill -9 $(ps -ef | pgrep -f "java")
+
+    - name: Create systemd service
+      copy:
+        dest: /etc/systemd/system/minecraft.service
+        content: |
+          [Unit]
+          Description=Minecraft Server
+          After=network.target
+
+          [Service]
+          WorkingDirectory=/opt/minecraft
+          ExecStart=/opt/minecraft/start
+          ExecStop=/opt/minecraft/stop
+          Restart=on-failure
+          User=minecraft
+          Group=minecraft
+
+          [Install]
+          WantedBy=default.target
+
+    - name: Ensure /opt/minecraft is owned by minecraft user
+      file:
+        path: /opt/minecraft
+        state: directory
+        recurse: yes
+        owner: minecraft
+        group: minecraft
+
+    - name: Reload systemd
+      systemd:
+        daemon_reload: yes
+
+    - name: Enable and start minecraft service
+      systemd:
+        name: minecraft
+        state: started
+        enabled: yes

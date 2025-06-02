@@ -49,5 +49,11 @@ variable "ami_id" {
 variable "key_name" {
   description = "SSH key pair name"
   type        = string
+  default     = "minecraft-server-ansible"
+}
+
+variable "key_path" {
+  description = "SSH key pair path"
+  type        = string
 }
 

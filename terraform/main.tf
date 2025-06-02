@@ -92,11 +92,16 @@ resource "aws_security_group" "minecraft-sg" {
   }
 }
 
+resource "aws_key_pair" "minecraft-key" {
+  key_name   = var.key_name
+  public_key = file(var.key_path)
+}
+
 resource "aws_instance" "minecraft-server" {
   ami           = var.ami_id
   instance_type = var.instance_type
   subnet_id     = aws_subnet.minecraft-subnet-public1.id
-  key_name      = var.key_name
+  key_name      = aws_key_pair.minecraft-key.key_name
 
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.minecraft-sg.id]
