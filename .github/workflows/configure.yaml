@@ -31,6 +31,7 @@ jobs:
 
       - name: Test ssh connection
         run: |
+          cat ~/.ssh/id_rsa
           ssh -i ~/.ssh/id_rsa -vvv ubuntu@${{ inputs.public_ip }}
 
       - name: Generate inventory file
