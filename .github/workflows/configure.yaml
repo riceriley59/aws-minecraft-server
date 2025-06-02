@@ -23,6 +23,9 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > id_rsa
           chmod 600 id_rsa
 
+      - name: Add server to known_hosts
+        run: ssh-keyscan -H ${{ inputs.public_ip }} >> ~/.ssh/known_hosts
+
       - name: Generate inventory file
         run: |
           echo "[minecraft]" > inventory.ini
