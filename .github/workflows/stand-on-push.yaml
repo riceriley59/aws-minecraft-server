@@ -1,9 +1,9 @@
 name: Standup Infrastructure on Push
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
-  workflow_dispatch:
 jobs:
   provision:
     uses: ./.github/workflows/provision.yaml
@@ -23,9 +23,10 @@ jobs:
       public_ip: ${{ needs.provision.outputs.public_ip }}
 
   output-ip:
-    name: Output public IP
+    name: Output Public IP
     needs: [configure, provision]
     runs-on: ubuntu-latest
     steps:
       - name: Print public IP
-        run: echo "Minecraft Server Public IP: ${{ needs.provision.outputs.public_ip }}"
+        run: |
+          echo "Provisioned instance public IP: ${{ needs.provision.outputs.public_ip }}"
