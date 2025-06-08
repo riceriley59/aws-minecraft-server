@@ -26,4 +26,4 @@ jobs:
         run: terraform init
 
       - name: Destroy Infrastructure
-        run: terraform destroy -auto-approve
+        run: terraform destroy -var 'key_path=~/.ssh/id_rsa.pub' -auto-approve
