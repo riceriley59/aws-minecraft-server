@@ -23,7 +23,7 @@ jobs:
       public_ip: ${{ needs.provision.outputs.public_ip }}
 
   output-ip:
-    name: Output Public IP
+    name: Output public IP
     needs: [configure, provision]
     runs-on: ubuntu-latest
     steps:
