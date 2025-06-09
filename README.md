@@ -56,7 +56,7 @@ terraform {
 }
 ```
 
-You need to make sure that you have an S3 bucket setup and that it is named in the correct order and referenced in this backend section. There is another terraform file in the `terraform-state-storage` folder which codifies this process although you will have to do a manual startup with no explicit backend on the first apply.
+You need to make sure that you have an S3 bucket setup and that it is named and referenced correctly in this backend section. There is another terraform file in the `terraform-state-storage` folder which codifies this process although you will have to do a manual startup with no explicit backend on the first apply.
 
 The reason this is needed is so that the Actions pipelines can always know and reference the current state of the infrastructure. Without this you would risk not properly destroying unused infrastructure and creating duplicated setups which can break the minecraft server and waste unneeded AWS resources.
 
