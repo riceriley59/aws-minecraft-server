@@ -91,7 +91,7 @@ And is triggered to run on every push to the github repository. Refer to the dia
 
 If you'd like to manually deploy the Minecraft server from your local machine—for testing, debugging, or development purposes—follow these steps:
 
-### 1. Provision infrastructure with Terraform:
+### 1. Provision Infrastructure with Terraform:
 
 Navigate to the `terraform` directory:
 ```
